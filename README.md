@@ -1,43 +1,29 @@
 # Interview Simulator (Java)
 
-This project is a simple interview simulator developed in Java.
-
-It was created to help students practice basic job interview questions in English in a simple and interactive way.
+Java project to simulate basic job interviews in English for 9th-grade students.
 
 ## Features
-
-- Basic interview questions in English
-- User input (answers)
-- Automatic feedback based on answer length
+- Interview questions in English
+- Feedback in Portuguese
+- Suggested answers
 - Score system
-- Final summary of answers
+- Final summary
+- Code organized into classes
+
+## Project Structure
+- `Main.java` -> program execution
+- `InterviewLogic.java` -> answer evaluation logic
+- `Result.java` -> stores score, feedback, and suggestion
 
 ## Technologies
-
 - Java
-- Scanner (input)
-- Basic logic (if/else, loops)
-
-## How to Run
-
-1. Compile the code:
-javac InterviewSimulator.java
-
-2. Run the program:
-java InterviewSimulator
-
-## Example Questions
-
-- What is your name?
-- What do you do?
-- Why do you want to work?
-- Tell me about yourself
-- What are your strengths?
+- Scanner
+- Conditional logic
 
 ## Purpose
+This project was created as part of a university project (Projeto Integrador) and aims to help students practice simple interview questions in English.
 
-This project is part of a university project (Projeto Integrador) and is also intended to be used in a school activity with 9th-grade students.
-
-## Author
-
-Lisanea Johanson
+## How to Run
+```bash
+javac Main.java InterviewLogic.java Result.java
+java Main
