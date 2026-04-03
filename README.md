@@ -1,29 +1,92 @@
-# Interview Simulator (Java)
+# 💼 Interview Simulator (Java)
 
-Java project to simulate basic job interviews in English for 9th-grade students.
+A simple and interactive job interview simulator in English, developed in Java.  
+This project helps students practice basic interview questions with automatic feedback and suggestions.
 
-## Features
-- Interview questions in English
-- Feedback in Portuguese
-- Suggested answers
-- Score system
-- Final summary
-- Code organized into classes
+---
 
-## Project Structure
-- `Main.java` -> program execution
-- `InterviewLogic.java` -> answer evaluation logic
-- `Result.java` -> stores score, feedback, and suggestion
+## 🎯 Objective
 
-## Technologies
-- Java
-- Scanner
-- Conditional logic
+This project was created as part of a Projeto Integrador (PI) with the goal of:
 
-## Purpose
-This project was created as part of a university project (Projeto Integrador) and aims to help students practice simple interview questions in English.
+- Helping students prepare for job interviews  
+- Practicing basic English communication  
+- Providing simple and educational feedback  
+- Introducing technology in a school environment  
 
-## How to Run
-```bash
-javac Main.java InterviewLogic.java Result.java
-java Main
+---
+
+## 🖥️ Features
+
+### Interview Simulation
+- 5 basic interview questions in English  
+- User answers interactively  
+- Automatic evaluation system  
+
+### Feedback System
+- Score based on answer quality  
+- Personalized feedback  
+- Suggestions for improvement  
+
+### Graphical Interface (Swing)
+- Start screen  
+- Clean and modern UI  
+- Progress bar  
+- Interactive experience  
+
+---
+
+## 🚀 Technologies Used
+
+- Java  
+- Java Swing (GUI)  
+- Object-Oriented Programming (OOP)  
+
+---
+
+## 📂 Project Structure
+
+interview-simulator-java
+├── InterfaceSimuladorStart.java
+├── InterviewLogic.java
+├── Result.java
+└── README.md
+
+---
+
+## ▶️ How to Run
+
+1. Clone the repository:
+git clone https://github.com/lisaanj/interview-simulator-java.git
+
+2. Open the project folder:
+cd interview-simulator-java
+
+3. Compile:
+javac *.java
+
+4. Run:
+java InterfaceSimuladorStart
+
+---
+
+## 🔮 Future Improvements
+
+- Save results (file or database)  
+- More interview questions  
+- Better answer analysis  
+- User profile system  
+- Cloud integration  
+
+---
+
+## 👩‍💻 Author
+
+Lisanea Johanson  
+ADS Student | Future Backend Developer (Java)
+
+---
+
+## ⭐ About this Project
+
+This project represents my learning journey in programming and my goal to build real solutions that help people.
