@@ -6,13 +6,12 @@ public class InterviewLogic {
 
         if (answer.isEmpty()) {
             return new Result(
-                0,
-                "Voce nao respondeu.",
-                getSuggestion(type)
-            );
+                    0,
+                    "Você não respondeu.",
+                    getSuggestion(type));
         }
 
-        switch(type) {
+        switch (type) {
             case "name":
                 return evaluateName(answer);
             case "about":
@@ -30,7 +29,7 @@ public class InterviewLogic {
 
     // Retorna sugestao baseada no tipo de pergunta
     public static String getSuggestion(String type) {
-        switch(type) {
+        switch (type) {
             case "name":
                 return "My name is Ana.";
             case "about":
@@ -54,7 +53,7 @@ public class InterviewLogic {
         if (answer.length() < 2) {
             return new Result(
                     0,
-                    "Digite um nome valido.",
+                    "Digite um nome válido.",
                     "My name is Ana.");
         }
 
@@ -69,7 +68,7 @@ public class InterviewLogic {
             return new Result(
                     4,
                     "Muito bom! Seu nome foi informado corretamente.",
-                    "Voce tambem pode responder assim: My name is " + answer + ".");
+                    "Você também pode responder assim: My name is " + answer + ".");
         }
 
         return new Result(
@@ -86,14 +85,14 @@ public class InterviewLogic {
         if (containsCommonMistakes(lower)) {
             return new Result(
                     2,
-                    "Boa tentativa! Sua resposta tem a ideia certa, mas pode melhorar no ingles.",
+                    "Boa tentativa! Sua resposta tem a ideia certa, mas pode melhorar no inglês.",
                     "My name is Ana. I am 14 years old and I am a student.");
         }
 
         if (words <= 2) {
             return new Result(
                     1,
-                    "Boa tentativa! Tente falar um pouco mais sobre voce.",
+                    "Boa tentativa! Tente falar um pouco mais sobre você.",
                     "I am 14 years old and I am a student.");
         }
 
@@ -102,12 +101,12 @@ public class InterviewLogic {
             if (words >= 6) {
                 return new Result(
                         4,
-                        "Muito bom! Voce se apresentou de forma clara.",
-                        "Sua resposta esta adequada para o nivel basico.");
+                        "Muito bom! Você se apresentou de forma clara.",
+                        "Sua resposta está adequada para o nível básico.");
             } else {
                 return new Result(
                         3,
-                        "Boa resposta! Voce pode acrescentar uma informacao a mais.",
+                        "Boa resposta! Você pode acrescentar uma informação a mais.",
                         "My name is Ana. I am 14 years old and I am a student.");
             }
         }
@@ -126,7 +125,7 @@ public class InterviewLogic {
         if (containsCommonMistakes(lower)) {
             return new Result(
                     2,
-                    "Sua resposta foi entendida, mas pode ficar mais natural em ingles.",
+                    "Sua resposta foi entendida, mas pode ficar mais natural em inglês.",
                     "I am a student.");
         }
 
@@ -135,12 +134,12 @@ public class InterviewLogic {
                 return new Result(
                         4,
                         "Boa resposta! Simples e correta.",
-                        "Voce tambem pode dizer: I am a student.");
+                        "Você também pode dizer: I am a student.");
             }
 
             return new Result(
                     1,
-                    "Boa tentativa! Tente explicar melhor o que voce faz.",
+                    "Boa tentativa! Tente explicar melhor o que você faz.",
                     "I am a student.");
         }
 
@@ -154,8 +153,8 @@ public class InterviewLogic {
         if (lower.contains("i study")) {
             return new Result(
                     3,
-                    "Boa resposta! Voce disse que estuda, o que faz sentido.",
-                    "Voce tambem pode dizer: I am a student.");
+                    "Boa resposta! Você disse que estuda, o que faz sentido.",
+                    "Você também pode dizer: I am a student.");
         }
 
         return new Result(
@@ -193,7 +192,7 @@ public class InterviewLogic {
                 } else {
                     return new Result(
                             3,
-                            "Boa resposta! Voce explicou seu motivo.",
+                            "Boa resposta! Você explicou seu motivo.",
                             "I want to work because I want to learn and help my family.");
                 }
             }
@@ -213,7 +212,7 @@ public class InterviewLogic {
         if (containsCommonMistakes(lower)) {
             return new Result(
                     2,
-                    "Boa tentativa! Vamos deixar a frase mais natural em ingles.",
+                    "Boa tentativa! Vamos deixar a frase mais natural em inglês.",
                     "I am responsible, organized, and friendly.");
         }
 
@@ -236,14 +235,14 @@ public class InterviewLogic {
             } else {
                 return new Result(
                         3,
-                        "Boa resposta! Voce pode acrescentar mais uma qualidade.",
+                        "Boa resposta! Você pode acrescentar mais uma qualidade.",
                         "I am responsible, organized, and friendly.");
             }
         }
 
         return new Result(
                 2,
-                "Boa tentativa! Tente usar qualidades simples em ingles.",
+                "Boa tentativa! Tente usar qualidades simples em inglês.",
                 "I am responsible, organized, and friendly.");
     }
 
@@ -258,10 +257,60 @@ public class InterviewLogic {
 
     // Detecta alguns erros comuns para feedback educativo
     public static boolean containsCommonMistakes(String text) {
+        text = text.toLowerCase();
+
         return text.contains("i 1m") ||
-                text.contains("24 year") ||
-                text.contains("job in") ||
+                text.contains("iam") ||
+
+                // Falta do verbo to be
+                text.contains("i student") ||
                 text.contains("i auxiliar") ||
-                text.contains("i student");
+                text.contains("i very") ||
+                text.contains("i ready") ||
+
+                // Idade errada
+                text.contains("i 20 years") ||
+                text.contains("i 20 year") ||
+                text.contains("i have") && text.contains("years") ||
+                text.contains("years olds") ||
+
+                // Artigos errados
+                text.contains("a students") ||
+                text.contains("i am student") ||
+
+                // Trabalho
+                text.contains("job in") ||
+                text.contains("work like") ||
+
+                // Falta do "to"
+                text.contains("want work") ||
+                text.contains("like work") ||
+                text.contains("need work") ||
+
+                // Because errado
+                text.contains("because learn") ||
+
+                // Nome errado
+                text.contains("my name ana") ||
+                text.contains("my name is is") ||
+
+                // Mistura português + inglês
+                text.contains("auxiliar") ||
+                text.contains("mercado") ||
+                text.contains("estudante") ||
+
+                // Tradução literal
+                text.contains("make faculdade") ||
+                text.contains("do internship") ||
+                text.contains("course of") ||
+
+                // Plural
+                text.contains("many informations") ||
+                text.contains("two year") ||
+
+                // Respostas muito fracas
+                text.equals("because yes") ||
+                text.equals("i want") ||
+                text.equals("i like");
     }
 }

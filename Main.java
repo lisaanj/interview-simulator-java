@@ -69,16 +69,16 @@ public class Main {
 
         if (percentage < 30) {
             System.out.println("Nivel: Iniciante");
-            System.out.println("Feedback geral: Voce esta comecando. O importante e tentar responder.");
+            System.out.println("Feedback geral: Você está começando. O importante é tentar responder.");
         } else if (percentage < 60) {
             System.out.println("Nivel: Basico");
-            System.out.println("Feedback geral: Boa tentativa! Continue praticando frases simples em ingles.");
+            System.out.println("Feedback geral: Boa tentativa! Continue praticando frases simples em inglês.");
         } else if (percentage < 85) {
             System.out.println("Nivel: Bom");
             System.out.println("Feedback geral: Muito bom! Suas respostas foram claras e adequadas.");
         } else {
             System.out.println("Nivel: Excelente");
-            System.out.println("Feedback geral: Excelente! Voce respondeu muito bem para uma entrevista basica.");
+            System.out.println("Feedback geral: Excelente! Você respondeu muito bem para uma entrevista básica.");
         }
 
         // Feedback final personalizado

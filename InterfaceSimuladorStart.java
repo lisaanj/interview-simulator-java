@@ -72,10 +72,9 @@ public class InterfaceSimuladorStart {
 
         JTextArea descricao = new JTextArea(
                 "This simulator helps students practice simple interview questions in English.\n\n" +
-                "You will answer 5 questions.\n" +
-                "After each answer, the system will show feedback and a suggestion.\n\n" +
-                "Click the button below to begin."
-        );
+                        "You will answer 5 questions.\n" +
+                        "After each answer, the system will show feedback and a suggestion.\n\n" +
+                        "Click the button below to begin.");
         descricao.setEditable(false);
         descricao.setFocusable(false);
         descricao.setFont(new Font("SansSerif", Font.PLAIN, 16));
@@ -85,8 +84,7 @@ public class InterfaceSimuladorStart {
         descricao.setWrapStyleWord(true);
         descricao.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(new Color(220, 214, 245), 1),
-                new EmptyBorder(20, 20, 20, 20)
-        ));
+                new EmptyBorder(20, 20, 20, 20)));
         descricao.setMaximumSize(new Dimension(620, 180));
         descricao.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -166,8 +164,7 @@ public class InterfaceSimuladorStart {
         card.setBackground(Color.WHITE);
         card.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(new Color(225, 221, 245), 1),
-                new EmptyBorder(22, 22, 22, 22)
-        ));
+                new EmptyBorder(22, 22, 22, 22)));
 
         JLabel perguntaTitulo = new JLabel("Question");
         perguntaTitulo.setFont(new Font("SansSerif", Font.BOLD, 16));
@@ -209,8 +206,7 @@ public class InterfaceSimuladorStart {
         feedbackPanel.setBackground(new Color(244, 240, 255));
         feedbackPanel.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(new Color(215, 200, 255), 1),
-                new EmptyBorder(12, 12, 12, 12)
-        ));
+                new EmptyBorder(12, 12, 12, 12)));
         feedbackPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         feedbackLabel = new JLabel("Write your answer and click Next.");
@@ -261,8 +257,7 @@ public class InterfaceSimuladorStart {
 
         feedbackLabel.setText(
                 "<html><b>Feedback:</b> " + r.feedback +
-                "<br><b>Suggestion:</b> " + r.suggestion + "</html>"
-        );
+                        "<br><b>Suggestion:</b> " + r.suggestion + "</html>");
 
         perguntaAtual++;
 
@@ -283,33 +278,32 @@ public class InterfaceSimuladorStart {
         String feedbackFinal;
 
         if (percentage < 30) {
-            nivel = "Beginner";
-            feedbackFinal = "You are just starting. Keep practicing simple answers.";
+            nivel = "Iniciante";
+            feedbackFinal = "Você está começando. O importante é tentar responder.";
         } else if (percentage < 60) {
-            nivel = "Basic";
-            feedbackFinal = "Good effort! Practice more to improve your answers.";
+            nivel = "Básico";
+            feedbackFinal = "Boa tentativa! Continue praticando frases simples em inglês.";
         } else if (percentage < 85) {
-            nivel = "Good";
-            feedbackFinal = "Very good! Your answers were clear and appropriate.";
+            nivel = "Bom";
+            feedbackFinal = "Muito bom! Suas respostas foram claras e adequadas.";
         } else {
-            nivel = "Excellent";
-            feedbackFinal = "Excellent! You answered very well in this interview simulation.";
+            nivel = "Excelente";
+            feedbackFinal = "Excelente! Você respondeu muito bem para uma entrevista básica.";
         }
 
         JPanel resultPanel = new JPanel(new BorderLayout(10, 10));
         resultPanel.setBackground(new Color(248, 245, 255));
         resultPanel.setBorder(new EmptyBorder(18, 18, 18, 18));
 
-        JLabel resultTitle = new JLabel("Final Result");
+        JLabel resultTitle = new JLabel("Resultado Final");
         resultTitle.setFont(new Font("SansSerif", Font.BOLD, 22));
         resultTitle.setForeground(new Color(75, 61, 117));
 
         JTextArea resultArea = new JTextArea(
-                "Score: " + score + "/20\n" +
-                String.format("Performance: %.1f%%\n", percentage) +
-                "Level: " + nivel + "\n\n" +
-                "Final feedback: " + feedbackFinal
-        );
+                "Pontuacao: " + score + "/20\n" +
+                        String.format("Aproveitamento: %.1f%%\n", percentage) +
+                        "Nivel: " + nivel + "\n\n" +
+                        "Feedback final: " + feedbackFinal);
 
         resultArea.setEditable(false);
         resultArea.setFont(new Font("SansSerif", Font.PLAIN, 15));
@@ -323,9 +317,8 @@ public class InterfaceSimuladorStart {
         JOptionPane.showMessageDialog(
                 frame,
                 resultPanel,
-                "Interview Result",
-                JOptionPane.INFORMATION_MESSAGE
-        );
+                "Resultado da Entrevista",
+                JOptionPane.INFORMATION_MESSAGE);
 
         System.exit(0);
     }
