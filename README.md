@@ -1,6 +1,10 @@
 # Interview Simulator
 
-Java desktop application developed to simulate a basic job interview in English, provide instant feedback, and store interview attempts in a MySQL database.
+## Overview
+
+This project is a desktop application that simulates a job interview in English, evaluates user answers, and stores results in a MySQL database.
+
+It was designed to help beginners practice interview scenarios while applying real-world Java concepts such as GUI development, business logic, input validation, and database integration.
 
 This project was created as part of my learning journey in Systems Analysis and Development, with a focus on combining Java, graphical interfaces, business logic, and database integration in a practical educational solution.
 
@@ -46,6 +50,15 @@ This project was created as part of my learning journey in Systems Analysis and 
 - MySQL
 - Object-Oriented Programming
 
+## Skills Demonstrated
+
+- Desktop application development with Java Swing
+- JDBC integration with MySQL
+- Input validation and business rules
+- Data persistence and history tracking
+- UI organization and user flow design
+- Clean separation between interface, logic, and data access layers
+
 ## Screenshots
 
 ### Start screen
@@ -61,22 +74,22 @@ This project was created as part of my learning journey in Systems Analysis and 
 
 ```text
 interview-simulator-java/
-├─ lib/
-│  └─ mysql-connector-j-9.6.0.jar
-├─ img/
-├─ src/
-│  ├─ DatabaseConnection.java
-│  ├─ HistoryEntry.java
-│  ├─ InterfaceSimuladorStart.java
-│  ├─ InterviewLogic.java
-│  ├─ InterviewSimulator.java
-│  ├─ Main.java
-│  ├─ Result.java
-│  ├─ ResultDAO.java
-│  ├─ TestDatabaseConnection.java
-│  ├─ TesteConexao.java
-│  └─ TestSaveResult.java
-└─ README.md
+|-- lib/
+|   |-- mysql-connector-j-9.6.0.jar
+|-- img/
+|-- src/
+|   |-- DatabaseConnection.java
+|   |-- HistoryEntry.java
+|   |-- InterfaceSimuladorStart.java
+|   |-- InterviewLogic.java
+|   |-- InterviewSimulator.java
+|   |-- Main.java
+|   |-- Result.java
+|   |-- ResultDAO.java
+|   |-- TestDatabaseConnection.java
+|   |-- TesteConexao.java
+|   `-- TestSaveResult.java
+`-- README.md
 ```
 
 ## How to Run
