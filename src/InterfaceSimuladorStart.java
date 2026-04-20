@@ -1,11 +1,16 @@
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.util.List;
 
 public class InterfaceSimuladorStart {
 
     private int score = 0;
     private int perguntaAtual = 0;
+    private String candidateName = "";
+    private final String[] respostasUsuario = new String[5];
 
     private final String[] perguntas = {
             "What is your name?",
@@ -28,6 +33,7 @@ public class InterfaceSimuladorStart {
     private JTextArea perguntaArea;
     private JTextArea respostaArea;
     private JLabel feedbackLabel;
+    private JButton botaoProximo;
 
     public InterfaceSimuladorStart() {
         criarInterface();
@@ -71,10 +77,10 @@ public class InterfaceSimuladorStart {
         subtitulo.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JTextArea descricao = new JTextArea(
-                "This simulator helps students practice simple interview questions in English.\n\n" +
-                        "You will answer 5 questions.\n" +
-                        "After each answer, the system will show feedback and a suggestion.\n\n" +
-                        "Click the button below to begin.");
+                "This simulator helps students practice simple interview questions in English.\n\n"
+                        + "You will answer 5 questions.\n"
+                        + "After each answer, the system will show feedback and a suggestion.\n\n"
+                        + "Click the button below to begin.");
         descricao.setEditable(false);
         descricao.setFocusable(false);
         descricao.setFont(new Font("SansSerif", Font.PLAIN, 16));
@@ -100,6 +106,17 @@ public class InterfaceSimuladorStart {
 
         startButton.addActionListener(e -> cardLayout.show(mainPanel, "entrevista"));
 
+        JButton historyButton = new JButton("View History");
+        historyButton.setFont(new Font("SansSerif", Font.BOLD, 16));
+        historyButton.setBackground(Color.WHITE);
+        historyButton.setForeground(new Color(92, 70, 156));
+        historyButton.setFocusPainted(false);
+        historyButton.setPreferredSize(new Dimension(180, 44));
+        historyButton.setMaximumSize(new Dimension(220, 44));
+        historyButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        historyButton.setBorder(BorderFactory.createLineBorder(new Color(200, 188, 245), 1));
+        historyButton.addActionListener(e -> showHistoryDialog());
+
         centro.add(Box.createVerticalGlue());
         centro.add(titulo);
         centro.add(Box.createVerticalStrut(10));
@@ -108,6 +125,8 @@ public class InterfaceSimuladorStart {
         centro.add(descricao);
         centro.add(Box.createVerticalStrut(25));
         centro.add(startButton);
+        centro.add(Box.createVerticalStrut(12));
+        centro.add(historyButton);
         centro.add(Box.createVerticalGlue());
 
         painel.add(centro, BorderLayout.CENTER);
@@ -230,14 +249,13 @@ public class InterfaceSimuladorStart {
         JPanel painelRodape = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         painelRodape.setOpaque(false);
 
-        JButton botaoProximo = new JButton("Next");
+        botaoProximo = new JButton("Next");
         botaoProximo.setFont(new Font("SansSerif", Font.BOLD, 16));
         botaoProximo.setFocusPainted(false);
         botaoProximo.setBackground(new Color(124, 92, 255));
         botaoProximo.setForeground(Color.WHITE);
         botaoProximo.setPreferredSize(new Dimension(140, 44));
         botaoProximo.setBorder(BorderFactory.createEmptyBorder());
-
         botaoProximo.addActionListener(e -> processarResposta());
 
         painelRodape.add(botaoProximo);
@@ -252,12 +270,27 @@ public class InterfaceSimuladorStart {
     private void processarResposta() {
         String resposta = respostaArea.getText().trim();
 
+        if (resposta.isEmpty()) {
+            JOptionPane.showMessageDialog(
+                    frame,
+                    "Write an answer before continuing.",
+                    "Answer Required",
+                    JOptionPane.WARNING_MESSAGE);
+            respostaArea.requestFocusInWindow();
+            return;
+        }
+
         Result r = InterviewLogic.evaluateAnswer(tipos[perguntaAtual], resposta);
-        score += r.score;
+        score += r.getScore();
+        respostasUsuario[perguntaAtual] = resposta;
+
+        if (perguntaAtual == 0) {
+            candidateName = extractCandidateName(resposta);
+        }
 
         feedbackLabel.setText(
-                "<html><b>Feedback:</b> " + r.feedback +
-                        "<br><b>Suggestion:</b> " + r.suggestion + "</html>");
+                "<html><b>Feedback:</b> " + r.getFeedback()
+                        + "<br><b>Suggestion:</b> " + r.getSuggestion() + "</html>");
 
         perguntaAtual++;
 
@@ -273,23 +306,17 @@ public class InterfaceSimuladorStart {
 
     private void mostrarResultadoFinal() {
         double percentage = (score * 100.0) / 20.0;
+        String englishLevel = determineFinalEnglishLevel();
+        String nivel = determineFinalLabel(englishLevel);
+        String feedbackFinal = determineFinalFeedback(englishLevel);
+        String answersSummary = buildAnswersSummary();
 
-        String nivel;
-        String feedbackFinal;
-
-        if (percentage < 30) {
-            nivel = "Iniciante";
-            feedbackFinal = "Você está começando. O importante é tentar responder.";
-        } else if (percentage < 60) {
-            nivel = "Básico";
-            feedbackFinal = "Boa tentativa! Continue praticando frases simples em inglês.";
-        } else if (percentage < 85) {
-            nivel = "Bom";
-            feedbackFinal = "Muito bom! Suas respostas foram claras e adequadas.";
-        } else {
-            nivel = "Excelente";
-            feedbackFinal = "Excelente! Você respondeu muito bem para uma entrevista básica.";
-        }
+        ResultDAO dao = new ResultDAO();
+        String savedName = candidateName.isBlank() ? "Sem nome" : candidateName;
+        boolean saved = dao.saveResult(savedName, score, englishLevel, feedbackFinal, answersSummary);
+        String saveStatus = saved
+                ? "Resultado salvo no banco com sucesso."
+                : "Nao foi possivel salvar no banco: " + dao.getLastErrorMessage();
 
         JPanel resultPanel = new JPanel(new BorderLayout(10, 10));
         resultPanel.setBackground(new Color(248, 245, 255));
@@ -300,10 +327,11 @@ public class InterfaceSimuladorStart {
         resultTitle.setForeground(new Color(75, 61, 117));
 
         JTextArea resultArea = new JTextArea(
-                "Pontuacao: " + score + "/20\n" +
-                        String.format("Aproveitamento: %.1f%%\n", percentage) +
-                        "Nivel: " + nivel + "\n\n" +
-                        "Feedback final: " + feedbackFinal);
+                "Pontua\u00e7\u00e3o: " + score + "/20\n"
+                        + String.format("Aproveitamento: %.1f%%\n", percentage)
+                        + "Nivel: " + nivel + " (" + englishLevel + ")\n\n"
+                        + "Feedback final: " + feedbackFinal + "\n\n"
+                        + saveStatus);
 
         resultArea.setEditable(false);
         resultArea.setFont(new Font("SansSerif", Font.PLAIN, 15));
@@ -314,13 +342,307 @@ public class InterfaceSimuladorStart {
         resultPanel.add(resultTitle, BorderLayout.NORTH);
         resultPanel.add(resultArea, BorderLayout.CENTER);
 
-        JOptionPane.showMessageDialog(
+        Object[] options = {"Restart", "Close"};
+        int choice = JOptionPane.showOptionDialog(
                 frame,
                 resultPanel,
                 "Resultado da Entrevista",
-                JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.INFORMATION_MESSAGE,
+                null,
+                options,
+                options[0]);
 
-        System.exit(0);
+        if (choice == 0) {
+            reiniciarEntrevista();
+        } else {
+            frame.dispose();
+        }
+    }
+
+    private void reiniciarEntrevista() {
+        score = 0;
+        perguntaAtual = 0;
+        candidateName = "";
+        for (int i = 0; i < respostasUsuario.length; i++) {
+            respostasUsuario[i] = "";
+        }
+        perguntaArea.setText(perguntas[0]);
+        progressoLabel.setText("Question 1 of 5");
+        barraProgresso.setValue(1);
+        respostaArea.setText("");
+        feedbackLabel.setText("Write your answer and click Next.");
+        botaoProximo.setEnabled(true);
+        cardLayout.show(mainPanel, "inicio");
+    }
+
+    private void showHistoryDialog() {
+        ResultDAO dao = new ResultDAO();
+        List<HistoryEntry> history = dao.listResults();
+
+        if (dao.getLastErrorMessage() != null) {
+            JOptionPane.showMessageDialog(
+                    frame,
+                    "Nao foi possivel carregar o historico.\n"
+                            + "Confira se a coluna data_tentativa existe na tabela resultados.\n\n"
+                            + "Erro: " + dao.getLastErrorMessage(),
+                    "Erro ao carregar historico",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        String[] columns = {"Nome", "Pontuacao", "Nivel", "Data"};
+        DefaultTableModel model = new DefaultTableModel(columns, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+
+        for (HistoryEntry entry : history) {
+            model.addRow(new Object[]{
+                    entry.getName(),
+                    entry.getScore(),
+                    entry.getEnglishLevel(),
+                    entry.getDate()
+            });
+        }
+
+        JTable table = new JTable(model);
+        table.setRowHeight(30);
+        table.getTableHeader().setReorderingAllowed(false);
+        table.setFillsViewportHeight(true);
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        table.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        table.setForeground(new Color(45, 37, 78));
+        table.setGridColor(new Color(230, 224, 247));
+        table.setSelectionBackground(new Color(230, 223, 255));
+        table.setSelectionForeground(new Color(45, 37, 78));
+        table.setShowHorizontalLines(true);
+        table.setShowVerticalLines(false);
+
+        JTableHeader header = table.getTableHeader();
+        header.setFont(new Font("SansSerif", Font.BOLD, 14));
+        header.setBackground(new Color(124, 92, 255));
+        header.setForeground(Color.WHITE);
+        header.setPreferredSize(new Dimension(header.getPreferredSize().width, 34));
+
+        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setPreferredSize(new Dimension(620, 220));
+        scrollPane.setBorder(BorderFactory.createLineBorder(new Color(214, 206, 242), 1));
+
+        JTextArea detailsArea = new JTextArea();
+        detailsArea.setEditable(false);
+        detailsArea.setLineWrap(true);
+        detailsArea.setWrapStyleWord(true);
+        detailsArea.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        detailsArea.setForeground(new Color(48, 39, 86));
+        detailsArea.setBackground(new Color(252, 250, 255));
+        detailsArea.setBorder(new EmptyBorder(12, 12, 12, 12));
+
+        if (!history.isEmpty()) {
+            detailsArea.setText(formatHistoryDetails(history.get(0)));
+            table.setRowSelectionInterval(0, 0);
+        } else {
+            detailsArea.setText("Nenhuma tentativa salva ainda.");
+        }
+
+        table.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                int selectedRow = table.getSelectedRow();
+                if (selectedRow >= 0 && selectedRow < history.size()) {
+                    detailsArea.setText(formatHistoryDetails(history.get(selectedRow)));
+                }
+            }
+        });
+
+        JScrollPane detailsScrollPane = new JScrollPane(detailsArea);
+        detailsScrollPane.setPreferredSize(new Dimension(620, 170));
+        detailsScrollPane.setBorder(BorderFactory.createLineBorder(new Color(214, 206, 242), 1));
+
+        JPanel panel = new JPanel(new BorderLayout(10, 10));
+        panel.setBorder(new EmptyBorder(16, 16, 16, 16));
+        panel.setBackground(new Color(246, 243, 255));
+
+        JLabel title = new JLabel("Historico de Resultados");
+        title.setFont(new Font("SansSerif", Font.BOLD, 20));
+        title.setForeground(new Color(75, 61, 117));
+
+        JLabel subtitle = new JLabel("Selecione uma tentativa para ver feedback e respostas.");
+        subtitle.setFont(new Font("SansSerif", Font.PLAIN, 13));
+        subtitle.setForeground(new Color(106, 94, 148));
+
+        JPanel titlePanel = new JPanel();
+        titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.Y_AXIS));
+        titlePanel.setOpaque(false);
+        titlePanel.add(title);
+        titlePanel.add(Box.createVerticalStrut(4));
+        titlePanel.add(subtitle);
+
+        JPanel tableCard = new JPanel(new BorderLayout());
+        tableCard.setBackground(Color.WHITE);
+        tableCard.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(214, 206, 242), 1),
+                new EmptyBorder(10, 10, 10, 10)));
+        tableCard.add(scrollPane, BorderLayout.CENTER);
+
+        JPanel detailsCard = new JPanel(new BorderLayout(0, 8));
+        detailsCard.setBackground(Color.WHITE);
+        detailsCard.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(214, 206, 242), 1),
+                new EmptyBorder(10, 10, 10, 10)));
+
+        JLabel detailsTitle = new JLabel("Detalhes da Tentativa");
+        detailsTitle.setFont(new Font("SansSerif", Font.BOLD, 15));
+        detailsTitle.setForeground(new Color(75, 61, 117));
+
+        detailsCard.add(detailsTitle, BorderLayout.NORTH);
+        detailsCard.add(detailsScrollPane, BorderLayout.CENTER);
+
+        panel.add(titlePanel, BorderLayout.NORTH);
+        panel.add(tableCard, BorderLayout.CENTER);
+        panel.add(detailsCard, BorderLayout.SOUTH);
+
+        JOptionPane.showMessageDialog(
+                frame,
+                panel,
+                "Historico",
+                JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private String extractCandidateName(String answer) {
+        String cleaned = answer.trim();
+        String lower = cleaned.toLowerCase();
+
+        if (lower.startsWith("my name is ")) {
+            cleaned = cleaned.substring(11).trim();
+        } else if (lower.startsWith("i am ")) {
+            cleaned = cleaned.substring(5).trim();
+        } else if (lower.startsWith("i'm ")) {
+            cleaned = cleaned.substring(4).trim();
+        }
+
+        cleaned = cleaned.replaceAll("[.!?,;:]+$", "").trim();
+        cleaned = cleaned.replaceAll("[^\\p{L}\\s'-]", " ").trim();
+        cleaned = cleaned.replaceAll("\\s+", " ").trim();
+
+        if (cleaned.isBlank()) {
+            return "Sem nome";
+        }
+
+        String[] words = cleaned.split(" ");
+        if (words.length == 1) {
+            return capitalizeName(cleaned);
+        }
+
+        StringBuilder nameBuilder = new StringBuilder();
+        int added = 0;
+
+        for (String word : words) {
+            if (word.isBlank()) {
+                continue;
+            }
+
+            String normalized = word.toLowerCase();
+            if (normalized.equals("student") || normalized.equals("years") || normalized.equals("old")
+                    || normalized.equals("responsible") || normalized.equals("organized")) {
+                break;
+            }
+
+            if (added > 0) {
+                nameBuilder.append(" ");
+            }
+            nameBuilder.append(capitalizeName(word));
+            added++;
+
+            if (added == 2) {
+                break;
+            }
+        }
+
+        if (nameBuilder.length() == 0) {
+            return "Sem nome";
+        }
+
+        return nameBuilder.toString();
+    }
+
+    private String buildAnswersSummary() {
+        StringBuilder summary = new StringBuilder();
+
+        for (int i = 0; i < perguntas.length; i++) {
+            String answer = respostasUsuario[i] == null || respostasUsuario[i].isBlank()
+                    ? "(sem resposta)"
+                    : respostasUsuario[i];
+            summary.append("Pergunta ").append(i + 1).append(": ").append(perguntas[i]).append("\n");
+            summary.append("Resposta: ").append(answer);
+
+            if (i < perguntas.length - 1) {
+                summary.append("\n\n");
+            }
+        }
+
+        return summary.toString();
+    }
+
+    private String formatHistoryDetails(HistoryEntry entry) {
+        String feedback = entry.getFeedback() == null || entry.getFeedback().isBlank()
+                ? "Sem feedback salvo."
+                : entry.getFeedback();
+        String answers = entry.getAnswersSummary() == null || entry.getAnswersSummary().isBlank()
+                ? "As respostas desta tentativa nao foram salvas."
+                : entry.getAnswersSummary();
+
+        return "Feedback final:\n" + feedback + "\n\n"
+                + "Respostas da entrevista:\n" + answers;
+    }
+
+    private String capitalizeName(String text) {
+        if (text.isBlank()) {
+            return text;
+        }
+
+        String lower = text.toLowerCase();
+        return Character.toUpperCase(lower.charAt(0)) + lower.substring(1);
+    }
+
+    private String determineFinalEnglishLevel() {
+        if (score <= 5) {
+            return "A1";
+        }
+        if (score <= 10) {
+            return "A2";
+        }
+        if (score <= 15) {
+            return "B1";
+        }
+        return "B2";
+    }
+
+    private String determineFinalLabel(String englishLevel) {
+        switch (englishLevel) {
+            case "A1":
+                return "Iniciante";
+            case "A2":
+                return "B\u00e1sico";
+            case "B1":
+                return "Bom";
+            default:
+                return "Excelente";
+        }
+    }
+
+    private String determineFinalFeedback(String englishLevel) {
+        switch (englishLevel) {
+            case "A1":
+                return "Voc\u00ea est\u00e1 come\u00e7ando. O importante \u00e9 tentar responder.";
+            case "A2":
+                return "Boa tentativa! Continue praticando frases simples em ingl\u00eas.";
+            case "B1":
+                return "Muito bom! Suas respostas foram claras e adequadas.";
+            default:
+                return "Excelente! Voc\u00ea respondeu muito bem para uma entrevista b\u00e1sica.";
+        }
     }
 
     public static void main(String[] args) {

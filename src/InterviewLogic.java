@@ -1,14 +1,21 @@
 public class InterviewLogic {
 
-    // Funcao que escolhe qual avaliacao usar baseado no tipo
+    // Funcao que escolhe qual avaliacao usar baseado no tipo.
     public static Result evaluateAnswer(String type, String answer) {
         answer = answer.trim();
 
         if (answer.isEmpty()) {
             return new Result(
                     0,
-                    "Você não respondeu.",
+                    "Voc\u00ea n\u00e3o respondeu.",
                     getSuggestion(type));
+        }
+
+        if (containsLowercasePronounError(answer)) {
+            return new Result(
+                    1,
+                    "Boa tentativa! Em ingl\u00eas, o pronome 'I' deve ser escrito com letra mai\u00fascula.",
+                    "Exemplo correto: " + capitalizeStandaloneI(answer));
         }
 
         switch (type) {
@@ -27,7 +34,7 @@ public class InterviewLogic {
         }
     }
 
-    // Retorna sugestao baseada no tipo de pergunta
+    // Retorna sugestao baseada no tipo de pergunta.
     public static String getSuggestion(String type) {
         switch (type) {
             case "name":
@@ -45,7 +52,6 @@ public class InterviewLogic {
         }
     }
 
-    // Avaliacao da pergunta nome
     public static Result evaluateName(String answer) {
         String lower = answer.toLowerCase().trim();
         int words = countWords(answer);
@@ -53,7 +59,7 @@ public class InterviewLogic {
         if (answer.length() < 2) {
             return new Result(
                     0,
-                    "Digite um nome válido.",
+                    "Digite um nome v\u00e1lido.",
                     "My name is Ana.");
         }
 
@@ -68,7 +74,7 @@ public class InterviewLogic {
             return new Result(
                     4,
                     "Muito bom! Seu nome foi informado corretamente.",
-                    "Você também pode responder assim: My name is " + answer + ".");
+                    "Voc\u00ea tamb\u00e9m pode responder assim: My name is " + answer + ".");
         }
 
         return new Result(
@@ -77,7 +83,6 @@ public class InterviewLogic {
                 "My name is Ana.");
     }
 
-    // Avaliacao da pergunta "Tell me about yourself"
     public static Result evaluateAbout(String answer) {
         String lower = answer.toLowerCase();
         int words = countWords(answer);
@@ -85,30 +90,30 @@ public class InterviewLogic {
         if (containsCommonMistakes(lower)) {
             return new Result(
                     2,
-                    "Boa tentativa! Sua resposta tem a ideia certa, mas pode melhorar no inglês.",
+                    "Boa tentativa! Sua resposta tem a ideia certa, mas pode melhorar no ingl\u00eas.",
                     "My name is Ana. I am 14 years old and I am a student.");
         }
 
         if (words <= 2) {
             return new Result(
                     1,
-                    "Boa tentativa! Tente falar um pouco mais sobre você.",
+                    "Boa tentativa! Tente falar um pouco mais sobre voc\u00ea.",
                     "I am 14 years old and I am a student.");
         }
 
-        if ((lower.contains("i am") || lower.contains("my name is")) &&
-                (lower.contains("student") || lower.contains("years old"))) {
+        if ((lower.contains("i am") || lower.contains("my name is"))
+                && (lower.contains("student") || lower.contains("years old"))) {
             if (words >= 6) {
                 return new Result(
                         4,
-                        "Muito bom! Você se apresentou de forma clara.",
-                        "Sua resposta está adequada para o nível básico.");
-            } else {
-                return new Result(
-                        3,
-                        "Boa resposta! Você pode acrescentar uma informação a mais.",
-                        "My name is Ana. I am 14 years old and I am a student.");
+                        "Muito bom! Voc\u00ea se apresentou de forma clara.",
+                        "Sua resposta est\u00e1 adequada para o n\u00edvel b\u00e1sico.");
             }
+
+            return new Result(
+                    3,
+                    "Boa resposta! Voc\u00ea pode acrescentar uma informa\u00e7\u00e3o a mais.",
+                    "My name is Ana. I am 14 years old and I am a student.");
         }
 
         return new Result(
@@ -117,7 +122,6 @@ public class InterviewLogic {
                 "I am 14 years old and I am a student.");
     }
 
-    // Avaliacao da pergunta "What do you do?"
     public static Result evaluateJob(String answer) {
         String lower = answer.toLowerCase();
         int words = countWords(answer);
@@ -125,7 +129,7 @@ public class InterviewLogic {
         if (containsCommonMistakes(lower)) {
             return new Result(
                     2,
-                    "Sua resposta foi entendida, mas pode ficar mais natural em inglês.",
+                    "Sua resposta foi entendida, mas pode ficar mais natural em ingl\u00eas.",
                     "I am a student.");
         }
 
@@ -134,12 +138,12 @@ public class InterviewLogic {
                 return new Result(
                         4,
                         "Boa resposta! Simples e correta.",
-                        "Você também pode dizer: I am a student.");
+                        "Voc\u00ea tamb\u00e9m pode dizer: I am a student.");
             }
 
             return new Result(
                     1,
-                    "Boa tentativa! Tente explicar melhor o que você faz.",
+                    "Boa tentativa! Tente explicar melhor o que voc\u00ea faz.",
                     "I am a student.");
         }
 
@@ -153,8 +157,8 @@ public class InterviewLogic {
         if (lower.contains("i study")) {
             return new Result(
                     3,
-                    "Boa resposta! Você disse que estuda, o que faz sentido.",
-                    "Você também pode dizer: I am a student.");
+                    "Boa resposta! Voc\u00ea disse que estuda, o que faz sentido.",
+                    "Voc\u00ea tamb\u00e9m pode dizer: I am a student.");
         }
 
         return new Result(
@@ -163,7 +167,6 @@ public class InterviewLogic {
                 "I am a student.");
     }
 
-    // Avaliacao da pergunta "Why do you want to work?"
     public static Result evaluateReason(String answer) {
         String lower = answer.toLowerCase();
         int words = countWords(answer);
@@ -182,20 +185,19 @@ public class InterviewLogic {
                     "I want to work because I want to learn.");
         }
 
-        if (lower.contains("because")) {
-            if (lower.contains("learn") || lower.contains("help") || lower.contains("family")) {
-                if (words >= 7) {
-                    return new Result(
-                            4,
-                            "Muito bom! Seu motivo ficou claro.",
-                            "Sua resposta esta adequada.");
-                } else {
-                    return new Result(
-                            3,
-                            "Boa resposta! Você explicou seu motivo.",
-                            "I want to work because I want to learn and help my family.");
-                }
+        if (lower.contains("because")
+                && (lower.contains("learn") || lower.contains("help") || lower.contains("family"))) {
+            if (words >= 7) {
+                return new Result(
+                        4,
+                        "Muito bom! Seu motivo ficou claro.",
+                        "Sua resposta esta adequada.");
             }
+
+            return new Result(
+                    3,
+                    "Boa resposta! Voc\u00ea explicou seu motivo.",
+                    "I want to work because I want to learn and help my family.");
         }
 
         return new Result(
@@ -204,7 +206,6 @@ public class InterviewLogic {
                 "I want to work because I want to learn.");
     }
 
-    // Avaliacao da pergunta "What are your strengths?"
     public static Result evaluateStrengths(String answer) {
         String lower = answer.toLowerCase();
         int words = countWords(answer);
@@ -212,7 +213,7 @@ public class InterviewLogic {
         if (containsCommonMistakes(lower)) {
             return new Result(
                     2,
-                    "Boa tentativa! Vamos deixar a frase mais natural em inglês.",
+                    "Boa tentativa! Vamos deixar a frase mais natural em ingl\u00eas.",
                     "I am responsible, organized, and friendly.");
         }
 
@@ -223,30 +224,29 @@ public class InterviewLogic {
                     "I am responsible and organized.");
         }
 
-        if (lower.contains("responsible") || lower.contains("organized") ||
-                lower.contains("friendly") || lower.contains("dedicated") ||
-                lower.contains("kind") || lower.contains("communicative")) {
+        if (lower.contains("responsible") || lower.contains("organized")
+                || lower.contains("friendly") || lower.contains("dedicated")
+                || lower.contains("kind") || lower.contains("communicative")) {
 
             if (words >= 4) {
                 return new Result(
                         4,
                         "Muito bom! Voce citou qualidades importantes.",
                         "Sua resposta esta adequada.");
-            } else {
-                return new Result(
-                        3,
-                        "Boa resposta! Você pode acrescentar mais uma qualidade.",
-                        "I am responsible, organized, and friendly.");
             }
+
+            return new Result(
+                    3,
+                    "Boa resposta! Voc\u00ea pode acrescentar mais uma qualidade.",
+                    "I am responsible, organized, and friendly.");
         }
 
         return new Result(
                 2,
-                "Boa tentativa! Tente usar qualidades simples em inglês.",
+                "Boa tentativa! Tente usar qualidades simples em ingl\u00eas.",
                 "I am responsible, organized, and friendly.");
     }
 
-    // Conta quantas palavras existem na resposta
     public static int countWords(String text) {
         if (text.trim().isEmpty()) {
             return 0;
@@ -255,62 +255,59 @@ public class InterviewLogic {
         return words.length;
     }
 
-    // Detecta alguns erros comuns para feedback educativo
+    public static boolean containsLowercasePronounError(String text) {
+        return text.matches(".*\\bi\\b.*");
+    }
+
+    public static String capitalizeStandaloneI(String text) {
+        return text.replaceAll("\\bi\\b", "I");
+    }
+
+    // Detecta alguns erros comuns para feedback educativo.
     public static boolean containsCommonMistakes(String text) {
         text = text.toLowerCase();
 
-        return text.contains("i 1m") ||
-                text.contains("iam") ||
+        return text.contains("i 1m")
+                || text.contains("iam")
 
-                // Falta do verbo to be
-                text.contains("i student") ||
-                text.contains("i auxiliar") ||
-                text.contains("i very") ||
-                text.contains("i ready") ||
+                || text.contains("i student")
+                || text.contains("i auxiliar")
+                || text.contains("i very")
+                || text.contains("i ready")
 
-                // Idade errada
-                text.contains("i 20 years") ||
-                text.contains("i 20 year") ||
-                text.contains("i have") && text.contains("years") ||
-                text.contains("years olds") ||
+                || text.contains("i 20 years")
+                || text.contains("i 20 year")
+                || text.contains("i have") && text.contains("years")
+                || text.contains("years olds")
 
-                // Artigos errados
-                text.contains("a students") ||
-                text.contains("i am student") ||
+                || text.contains("a students")
+                || text.contains("i am student")
 
-                // Trabalho
-                text.contains("job in") ||
-                text.contains("work like") ||
+                || text.contains("job in")
+                || text.contains("work like")
 
-                // Falta do "to"
-                text.contains("want work") ||
-                text.contains("like work") ||
-                text.contains("need work") ||
+                || text.contains("want work")
+                || text.contains("like work")
+                || text.contains("need work")
 
-                // Because errado
-                text.contains("because learn") ||
+                || text.contains("because learn")
 
-                // Nome errado
-                text.contains("my name ana") ||
-                text.contains("my name is is") ||
+                || text.contains("my name ana")
+                || text.contains("my name is is")
 
-                // Mistura português + inglês
-                text.contains("auxiliar") ||
-                text.contains("mercado") ||
-                text.contains("estudante") ||
+                || text.contains("auxiliar")
+                || text.contains("mercado")
+                || text.contains("estudante")
 
-                // Tradução literal
-                text.contains("make faculdade") ||
-                text.contains("do internship") ||
-                text.contains("course of") ||
+                || text.contains("make faculdade")
+                || text.contains("do internship")
+                || text.contains("course of")
 
-                // Plural
-                text.contains("many informations") ||
-                text.contains("two year") ||
+                || text.contains("many informations")
+                || text.contains("two year")
 
-                // Respostas muito fracas
-                text.equals("because yes") ||
-                text.equals("i want") ||
-                text.equals("i like");
+                || text.equals("because yes")
+                || text.equals("i want")
+                || text.equals("i like");
     }
 }
