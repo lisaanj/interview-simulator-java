@@ -1,92 +1,154 @@
-# 💼 Interview Simulator (Java)
+# Interview Simulator
 
-A simple and interactive job interview simulator in English, developed in Java.  
-This project helps students practice basic interview questions with automatic feedback and suggestions.
+Java desktop application developed to simulate a basic job interview in English, provide instant feedback, and store interview attempts in a MySQL database.
 
----
+This project was created as part of my learning journey in Systems Analysis and Development, with a focus on combining Java, graphical interfaces, business logic, and database integration in a practical educational solution.
 
-## 🎯 Objective
+## Project Highlights
 
-This project was created as part of a Projeto Integrador (PI) with the goal of:
+- Desktop application built with Java Swing
+- Interactive interview flow with 5 questions in English
+- Automatic scoring and performance classification
+- Feedback and suggestions after each answer
+- Detection of common beginner mistakes in English
+- MySQL integration to save interview history
+- History screen with score, level, date, final feedback, and answers
 
-- Helping students prepare for job interviews  
-- Practicing basic English communication  
-- Providing simple and educational feedback  
-- Introducing technology in a school environment  
+## Main Features
 
----
+### Interview simulation
+- Start screen and guided interview flow
+- Progress tracking during the interview
+- Validation to prevent empty answers
+- Final result with score, percentage, and English level
 
-## 🖥️ Features
+### English feedback logic
+- Answer evaluation based on interview context
+- Suggestions for improvement
+- Special feedback for common errors such as lowercase `i` instead of `I`
+- Final classification using CEFR-inspired levels:
+  - `A1`
+  - `A2`
+  - `B1`
+  - `B2`
 
-### Interview Simulation
-- 5 basic interview questions in English  
-- User answers interactively  
-- Automatic evaluation system  
+### Database integration
+- MySQL connection using JDBC
+- Automatic result persistence
+- Interview history listing
+- Detailed attempt view with saved answers
 
-### Feedback System
-- Score based on answer quality  
-- Personalized feedback  
-- Suggestions for improvement  
+## Technologies Used
 
-### Graphical Interface (Swing)
-- Start screen  
-- Clean and modern UI  
-- Progress bar  
-- Interactive experience  
+- Java
+- Java Swing
+- JDBC
+- MySQL
+- Object-Oriented Programming
 
----
+## Screenshots
 
-## 🚀 Technologies Used
+### Start screen
+![Start Screen](img/tela%20inicial.png)
 
-- Java  
-- Java Swing (GUI)  
-- Object-Oriented Programming (OOP)  
+### Interview screen
+![Interview Screen](img/tela3.png)
 
----
+### Final result
+![Final Result](img/telafinal.png)
 
-## 📂 Project Structure
+## Project Structure
 
-interview-simulator-java
-├── InterfaceSimuladorStart.java
-├── InterviewLogic.java
-├── Result.java
-└── README.md
+```text
+interview-simulator-java/
+├─ lib/
+│  └─ mysql-connector-j-9.6.0.jar
+├─ img/
+├─ src/
+│  ├─ DatabaseConnection.java
+│  ├─ HistoryEntry.java
+│  ├─ InterfaceSimuladorStart.java
+│  ├─ InterviewLogic.java
+│  ├─ InterviewSimulator.java
+│  ├─ Main.java
+│  ├─ Result.java
+│  ├─ ResultDAO.java
+│  ├─ TestDatabaseConnection.java
+│  ├─ TesteConexao.java
+│  └─ TestSaveResult.java
+└─ README.md
+```
 
----
+## How to Run
 
-## ▶️ How to Run
+### Requirements
 
-1. Clone the repository:
-git clone https://github.com/lisaanj/interview-simulator-java.git
+- Java JDK installed
+- MySQL installed and running
+- Database `interview_simulator` created
+- Table `resultados` created
+- MySQL JDBC driver available in `lib/`
 
-2. Open the project folder:
-cd interview-simulator-java
+### Compile
 
-3. Compile:
-javac *.java
+```powershell
+javac -cp ".;lib/mysql-connector-j-9.6.0.jar" -d out src\*.java
+```
 
-4. Run:
-java InterfaceSimuladorStart
+### Run the application
 
----
+```powershell
+java -cp ".;out;lib/mysql-connector-j-9.6.0.jar" InterfaceSimuladorStart
+```
 
-## 🔮 Future Improvements
+### Test database connection
 
-- Save results (file or database)  
-- More interview questions  
-- Better answer analysis  
-- User profile system  
-- Cloud integration  
+```powershell
+java -cp ".;out;lib/mysql-connector-j-9.6.0.jar" TestDatabaseConnection
+```
 
----
+## Database Notes
 
-## 👩‍💻 Author
+The application expects a MySQL database named `interview_simulator`.
 
-Lisanea Johanson  
-ADS Student | Future Backend Developer (Java)
+Connection settings are configured in `DatabaseConnection.java`:
 
----
+- URL: `jdbc:mysql://localhost:3306/interview_simulator`
+- User: `root`
+- Password: `root123`
 
-## ⭐ About this Project
+The `resultados` table stores:
 
-This project represents my learning journey in programming and my goal to build real solutions that help people.
+- candidate name
+- score
+- English level
+- final feedback
+- interview date
+- saved answers
+
+## What This Project Demonstrates
+
+This project demonstrates my ability to:
+
+- build Java desktop applications
+- organize business logic in separate classes
+- connect applications to relational databases
+- create a user-friendly interface
+- validate user input
+- store and display historical data
+- evolve a project from a simple simulator into a more complete system
+
+## Future Improvements
+
+- Add more interview questions
+- Improve answer analysis with more grammar rules
+- Export results to PDF or CSV
+- Add user login/profile
+- Create dashboard charts for performance evolution
+
+## Author
+
+**Lisanea Johanson**  
+ADS Student | Java Developer in training
+
+If you are a recruiter or hiring manager, this project represents my practical experience applying Java, Swing, SQL, and software organization in a real academic portfolio project.
