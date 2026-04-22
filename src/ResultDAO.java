@@ -9,8 +9,22 @@ import java.util.List;
 public class ResultDAO {
     private String lastErrorMessage;
 
+    public boolean initializeDatabase() {
+        lastErrorMessage = null;
+
+        try (Connection conn = DatabaseConnection.connect()) {
+            ensureSchema(conn);
+            return true;
+        } catch (SQLException e) {
+            lastErrorMessage = e.getMessage();
+            System.out.println("Error initializing database:");
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public boolean saveResult(String name, int score, String englishLevel, String feedback) {
-        return saveResult(name, score, englishLevel, feedback, "");
+        return saveResult(name, score, englishLevel, feedback, "Respostas nao informadas.");
     }
 
     public boolean saveResult(String name, int score, String englishLevel, String feedback, String answersSummary) {
@@ -73,12 +87,42 @@ public class ResultDAO {
         return history;
     }
 
+    public boolean clearHistory() {
+        String sql = "DELETE FROM resultados";
+        lastErrorMessage = null;
+
+        try (Connection conn = DatabaseConnection.connect();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            ensureSchema(conn);
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            lastErrorMessage = e.getMessage();
+            System.out.println("Error clearing history:");
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     private PreparedStatement prepareHistoryStatement(Connection conn, String sql) throws SQLException {
         ensureSchema(conn);
         return conn.prepareStatement(sql);
     }
 
     private void ensureSchema(Connection conn) throws SQLException {
+        try (PreparedStatement stmt = conn.prepareStatement(
+                "CREATE TABLE IF NOT EXISTS resultados ("
+                        + "id INT AUTO_INCREMENT PRIMARY KEY,"
+                        + "nome VARCHAR(255) NOT NULL,"
+                        + "score INT NOT NULL,"
+                        + "nivel_ingles VARCHAR(10) NOT NULL,"
+                        + "feedback TEXT,"
+                        + "data_tentativa DATETIME DEFAULT CURRENT_TIMESTAMP,"
+                        + "respostas TEXT"
+                        + ")")) {
+            stmt.executeUpdate();
+        }
+
         if (!columnExists(conn, "resultados", "data_tentativa")) {
             try (PreparedStatement stmt = conn.prepareStatement(
                     "ALTER TABLE resultados ADD COLUMN data_tentativa DATETIME DEFAULT CURRENT_TIMESTAMP")) {

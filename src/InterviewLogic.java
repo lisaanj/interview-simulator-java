@@ -44,7 +44,7 @@ public class InterviewLogic {
             case "job":
                 return "I am a student.";
             case "reason":
-                return "I want to work because I want to learn.";
+                return "I want to work to learn and gain experience.";
             case "strengths":
                 return "I am responsible and organized.";
             default:
@@ -67,7 +67,7 @@ public class InterviewLogic {
             return new Result(
                     4,
                     "Muito bom! Resposta correta.",
-                    "Sua resposta ja esta adequada.");
+                    "Sua resposta já está adequada.");
         }
 
         if (words == 1 || words == 2) {
@@ -107,7 +107,7 @@ public class InterviewLogic {
                 return new Result(
                         4,
                         "Muito bom! Voc\u00ea se apresentou de forma clara.",
-                        "Sua resposta est\u00e1 adequada para o n\u00edvel b\u00e1sico.");
+                        "Sua resposta está clara e adequada.");
             }
 
             return new Result(
@@ -129,7 +129,7 @@ public class InterviewLogic {
         if (containsCommonMistakes(lower)) {
             return new Result(
                     2,
-                    "Sua resposta foi entendida, mas pode ficar mais natural em ingl\u00eas.",
+                    "Boa tentativa! Sua resposta foi entendida, mas pode ficar mais natural em inglês.",
                     "I am a student.");
         }
 
@@ -150,8 +150,8 @@ public class InterviewLogic {
         if (lower.contains("i am a student") || lower.contains("i am student")) {
             return new Result(
                     4,
-                    "Muito bom! Essa e uma resposta adequada para sua idade.",
-                    "Sua frase esta boa.");
+                    "Muito bom! Essa é uma resposta simples e adequada.",
+                    "Sua frase está boa.");
         }
 
         if (lower.contains("i study")) {
@@ -182,7 +182,7 @@ public class InterviewLogic {
             return new Result(
                     1,
                     "Boa tentativa! Tente explicar o motivo com um pouco mais de detalhes.",
-                    "I want to work because I want to learn.");
+                    "I want to work to learn and gain experience.");
         }
 
         if (lower.contains("because")
@@ -191,7 +191,7 @@ public class InterviewLogic {
                 return new Result(
                         4,
                         "Muito bom! Seu motivo ficou claro.",
-                        "Sua resposta esta adequada.");
+                        "Sua resposta está adequada.");
             }
 
             return new Result(
@@ -202,8 +202,8 @@ public class InterviewLogic {
 
         return new Result(
                 2,
-                "Boa tentativa! Tente usar 'because' para explicar seu motivo.",
-                "I want to work because I want to learn.");
+                "Boa tentativa! Tente explicar melhor o seu motivo.",
+                "I want to work to learn and gain experience.");
     }
 
     public static Result evaluateStrengths(String answer) {
@@ -231,8 +231,8 @@ public class InterviewLogic {
             if (words >= 4) {
                 return new Result(
                         4,
-                        "Muito bom! Voce citou qualidades importantes.",
-                        "Sua resposta esta adequada.");
+                        "Muito bom! Você citou qualidades importantes.",
+                        "Sua resposta está adequada.");
             }
 
             return new Result(

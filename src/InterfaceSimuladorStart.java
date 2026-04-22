@@ -3,6 +3,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.Window;
 import java.util.List;
 
 public class InterfaceSimuladorStart {
@@ -36,11 +37,27 @@ public class InterfaceSimuladorStart {
     private JButton botaoProximo;
 
     public InterfaceSimuladorStart() {
+        initializeDatabaseOnStartup();
         criarInterface();
     }
 
+    private void initializeDatabaseOnStartup() {
+        ResultDAO dao = new ResultDAO();
+        boolean initialized = dao.initializeDatabase();
+
+        if (!initialized) {
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Não foi possível inicializar o banco de dados.\n"
+                            + "O sistema vai abrir, mas o histórico e o salvamento podem falhar.\n\n"
+                            + "Erro: " + dao.getLastErrorMessage(),
+                    "Erro de banco",
+                    JOptionPane.WARNING_MESSAGE);
+        }
+    }
+
     private void criarInterface() {
-        frame = new JFrame("Interview Simulator");
+        frame = new JFrame("Simulador de Entrevista");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(850, 600);
         frame.setLocationRelativeTo(null);
@@ -66,21 +83,21 @@ public class InterfaceSimuladorStart {
         centro.setLayout(new BoxLayout(centro, BoxLayout.Y_AXIS));
         centro.setOpaque(false);
 
-        JLabel titulo = new JLabel("Interview Simulator");
+        JLabel titulo = new JLabel("Simulador de Entrevista");
         titulo.setFont(new Font("SansSerif", Font.BOLD, 34));
         titulo.setForeground(new Color(78, 56, 160));
         titulo.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JLabel subtitulo = new JLabel("Practice basic job interview answers in English");
+        JLabel subtitulo = new JLabel("Pratique respostas básicas de entrevista em inglês");
         subtitulo.setFont(new Font("SansSerif", Font.PLAIN, 17));
         subtitulo.setForeground(new Color(108, 92, 160));
         subtitulo.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JTextArea descricao = new JTextArea(
-                "This simulator helps students practice simple interview questions in English.\n\n"
-                        + "You will answer 5 questions.\n"
-                        + "After each answer, the system will show feedback and a suggestion.\n\n"
-                        + "Click the button below to begin.");
+                "Este simulador ajuda você a praticar perguntas simples de entrevista em inglês.\n\n"
+                        + "Você responderá 5 perguntas.\n"
+                        + "Depois de cada resposta, o sistema mostrará um feedback e uma sugestão.\n\n"
+                        + "Clique no botão abaixo para começar.");
         descricao.setEditable(false);
         descricao.setFocusable(false);
         descricao.setFont(new Font("SansSerif", Font.PLAIN, 16));
@@ -94,7 +111,7 @@ public class InterfaceSimuladorStart {
         descricao.setMaximumSize(new Dimension(620, 180));
         descricao.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JButton startButton = new JButton("Start Interview");
+        JButton startButton = new JButton("Iniciar Entrevista");
         startButton.setFont(new Font("SansSerif", Font.BOLD, 17));
         startButton.setBackground(new Color(124, 92, 255));
         startButton.setForeground(Color.WHITE);
@@ -106,7 +123,7 @@ public class InterfaceSimuladorStart {
 
         startButton.addActionListener(e -> cardLayout.show(mainPanel, "entrevista"));
 
-        JButton historyButton = new JButton("View History");
+        JButton historyButton = new JButton("Ver Histórico");
         historyButton.setFont(new Font("SansSerif", Font.BOLD, 16));
         historyButton.setBackground(Color.WHITE);
         historyButton.setForeground(new Color(92, 70, 156));
@@ -143,17 +160,17 @@ public class InterfaceSimuladorStart {
         painelTopo.setBackground(new Color(124, 92, 255));
         painelTopo.setBorder(new EmptyBorder(20, 20, 20, 20));
 
-        JLabel tituloLabel = new JLabel("Interview Simulator");
+        JLabel tituloLabel = new JLabel("Simulador de Entrevista");
         tituloLabel.setFont(new Font("SansSerif", Font.BOLD, 30));
         tituloLabel.setForeground(Color.WHITE);
         tituloLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JLabel subtituloLabel = new JLabel("Answer the questions in English");
+        JLabel subtituloLabel = new JLabel("Responda as perguntas em inglês");
         subtituloLabel.setFont(new Font("SansSerif", Font.PLAIN, 15));
         subtituloLabel.setForeground(new Color(232, 226, 255));
         subtituloLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        progressoLabel = new JLabel("Question 1 of 5");
+        progressoLabel = new JLabel("Pergunta 1 de 5");
         progressoLabel.setFont(new Font("SansSerif", Font.BOLD, 14));
         progressoLabel.setForeground(Color.WHITE);
         progressoLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -185,7 +202,7 @@ public class InterfaceSimuladorStart {
                 BorderFactory.createLineBorder(new Color(225, 221, 245), 1),
                 new EmptyBorder(22, 22, 22, 22)));
 
-        JLabel perguntaTitulo = new JLabel("Question");
+        JLabel perguntaTitulo = new JLabel("Pergunta");
         perguntaTitulo.setFont(new Font("SansSerif", Font.BOLD, 16));
         perguntaTitulo.setForeground(new Color(75, 61, 117));
         perguntaTitulo.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -201,7 +218,7 @@ public class InterfaceSimuladorStart {
         perguntaArea.setBorder(new EmptyBorder(8, 0, 12, 0));
         perguntaArea.setMaximumSize(new Dimension(Integer.MAX_VALUE, 80));
 
-        JLabel respostaTitulo = new JLabel("Your answer");
+        JLabel respostaTitulo = new JLabel("Sua resposta");
         respostaTitulo.setFont(new Font("SansSerif", Font.BOLD, 16));
         respostaTitulo.setForeground(new Color(75, 61, 117));
         respostaTitulo.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -228,7 +245,7 @@ public class InterfaceSimuladorStart {
                 new EmptyBorder(12, 12, 12, 12)));
         feedbackPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        feedbackLabel = new JLabel("Write your answer and click Next.");
+        feedbackLabel = new JLabel("Escreva sua resposta e clique em Próximo.");
         feedbackLabel.setFont(new Font("SansSerif", Font.PLAIN, 14));
         feedbackLabel.setForeground(new Color(92, 70, 156));
 
@@ -249,7 +266,7 @@ public class InterfaceSimuladorStart {
         JPanel painelRodape = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         painelRodape.setOpaque(false);
 
-        botaoProximo = new JButton("Next");
+        botaoProximo = new JButton("Próximo");
         botaoProximo.setFont(new Font("SansSerif", Font.BOLD, 16));
         botaoProximo.setFocusPainted(false);
         botaoProximo.setBackground(new Color(124, 92, 255));
@@ -273,8 +290,8 @@ public class InterfaceSimuladorStart {
         if (resposta.isEmpty()) {
             JOptionPane.showMessageDialog(
                     frame,
-                    "Write an answer before continuing.",
-                    "Answer Required",
+                    "Escreva uma resposta antes de continuar.",
+                    "Resposta obrigatória",
                     JOptionPane.WARNING_MESSAGE);
             respostaArea.requestFocusInWindow();
             return;
@@ -289,14 +306,14 @@ public class InterfaceSimuladorStart {
         }
 
         feedbackLabel.setText(
-                "<html><b>Feedback:</b> " + r.getFeedback()
-                        + "<br><b>Suggestion:</b> " + r.getSuggestion() + "</html>");
+                        "<html><b>Feedback:</b> " + r.getFeedback()
+                        + "<br><b>Sugestão:</b> " + r.getSuggestion() + "</html>");
 
         perguntaAtual++;
 
         if (perguntaAtual < perguntas.length) {
             perguntaArea.setText(perguntas[perguntaAtual]);
-            progressoLabel.setText("Question " + (perguntaAtual + 1) + " of 5");
+            progressoLabel.setText("Pergunta " + (perguntaAtual + 1) + " de 5");
             barraProgresso.setValue(perguntaAtual + 1);
             respostaArea.setText("");
         } else {
@@ -342,7 +359,7 @@ public class InterfaceSimuladorStart {
         resultPanel.add(resultTitle, BorderLayout.NORTH);
         resultPanel.add(resultArea, BorderLayout.CENTER);
 
-        Object[] options = {"Restart", "Close"};
+        Object[] options = {"Reiniciar", "Fechar"};
         int choice = JOptionPane.showOptionDialog(
                 frame,
                 resultPanel,
@@ -368,10 +385,10 @@ public class InterfaceSimuladorStart {
             respostasUsuario[i] = "";
         }
         perguntaArea.setText(perguntas[0]);
-        progressoLabel.setText("Question 1 of 5");
+        progressoLabel.setText("Pergunta 1 de 5");
         barraProgresso.setValue(1);
         respostaArea.setText("");
-        feedbackLabel.setText("Write your answer and click Next.");
+        feedbackLabel.setText("Escreva sua resposta e clique em Próximo.");
         botaoProximo.setEnabled(true);
         cardLayout.show(mainPanel, "inicio");
     }
@@ -464,11 +481,11 @@ public class InterfaceSimuladorStart {
         panel.setBorder(new EmptyBorder(16, 16, 16, 16));
         panel.setBackground(new Color(246, 243, 255));
 
-        JLabel title = new JLabel("Historico de Resultados");
+        JLabel title = new JLabel("Histórico de Resultados");
         title.setFont(new Font("SansSerif", Font.BOLD, 20));
         title.setForeground(new Color(75, 61, 117));
 
-        JLabel subtitle = new JLabel("Selecione uma tentativa para ver feedback e respostas.");
+        JLabel subtitle = new JLabel("Selecione uma tentativa para ver o feedback e as respostas.");
         subtitle.setFont(new Font("SansSerif", Font.PLAIN, 13));
         subtitle.setForeground(new Color(106, 94, 148));
 
@@ -496,17 +513,69 @@ public class InterfaceSimuladorStart {
         detailsTitle.setFont(new Font("SansSerif", Font.BOLD, 15));
         detailsTitle.setForeground(new Color(75, 61, 117));
 
+        JPanel actionsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
+        actionsPanel.setOpaque(false);
+
+        JButton clearHistoryButton = new JButton("Limpar histórico");
+        clearHistoryButton.setFont(new Font("SansSerif", Font.BOLD, 14));
+        clearHistoryButton.setFocusPainted(false);
+        clearHistoryButton.setBackground(new Color(235, 227, 255));
+        clearHistoryButton.setForeground(new Color(92, 70, 156));
+        clearHistoryButton.setBorder(BorderFactory.createLineBorder(new Color(200, 188, 245), 1));
+        clearHistoryButton.addActionListener(e -> {
+            int confirm = JOptionPane.showConfirmDialog(
+                    frame,
+                    "Tem certeza que deseja apagar todo o histórico?",
+                    "Confirmar limpeza",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE);
+
+            if (confirm != JOptionPane.YES_OPTION) {
+                return;
+            }
+
+            boolean cleared = dao.clearHistory();
+
+            if (!cleared) {
+                JOptionPane.showMessageDialog(
+                        frame,
+                        "Não foi possível limpar o histórico.\n\nErro: " + dao.getLastErrorMessage(),
+                        "Erro ao limpar histórico",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            JOptionPane.showMessageDialog(
+                    frame,
+                    "Histórico apagado com sucesso.",
+                    "Histórico limpo",
+                    JOptionPane.INFORMATION_MESSAGE);
+
+            Window dialogWindow = SwingUtilities.getWindowAncestor(clearHistoryButton);
+            if (dialogWindow != null) {
+                dialogWindow.dispose();
+            }
+
+            showHistoryDialog();
+        });
+
+        actionsPanel.add(clearHistoryButton);
+
+        JPanel bottomPanel = new JPanel(new BorderLayout(0, 10));
+        bottomPanel.setOpaque(false);
         detailsCard.add(detailsTitle, BorderLayout.NORTH);
         detailsCard.add(detailsScrollPane, BorderLayout.CENTER);
+        bottomPanel.add(detailsCard, BorderLayout.CENTER);
+        bottomPanel.add(actionsPanel, BorderLayout.SOUTH);
 
         panel.add(titlePanel, BorderLayout.NORTH);
         panel.add(tableCard, BorderLayout.CENTER);
-        panel.add(detailsCard, BorderLayout.SOUTH);
+        panel.add(bottomPanel, BorderLayout.SOUTH);
 
         JOptionPane.showMessageDialog(
                 frame,
                 panel,
-                "Historico",
+                "Histórico",
                 JOptionPane.INFORMATION_MESSAGE);
     }
 
