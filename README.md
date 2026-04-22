@@ -8,6 +8,8 @@ It was designed to help beginners practice interview scenarios while applying re
 
 This project was created as part of my learning journey in Systems Analysis and Development, with a focus on combining Java, graphical interfaces, business logic, and database integration in a practical educational solution.
 
+It also reflects my portfolio approach to software development: building applications that are not only functional, but also organized, user-friendly, and progressively improved with new features and interface refinements.
+
 ## Project Highlights
 
 - Desktop application built with Java Swing
@@ -17,6 +19,8 @@ This project was created as part of my learning journey in Systems Analysis and 
 - Detection of common beginner mistakes in English
 - MySQL integration to save interview history
 - History screen with score, level, date, final feedback, and answers
+- Improved user experience with clearer interface texts and more consistent feedback
+- History management feature with option to clear saved results directly from the application
 
 ## Main Features
 
@@ -25,11 +29,13 @@ This project was created as part of my learning journey in Systems Analysis and 
 - Progress tracking during the interview
 - Validation to prevent empty answers
 - Final result with score, percentage, and English level
+- Cleaner and more polished interface focused on usability
 
 ### English feedback logic
 - Answer evaluation based on interview context
 - Suggestions for improvement
 - Special feedback for common errors such as lowercase `i` instead of `I`
+- More consistent and natural feedback messages for the user
 - Final classification using CEFR-inspired levels:
   - `A1`
   - `A2`
@@ -41,6 +47,7 @@ This project was created as part of my learning journey in Systems Analysis and 
 - Automatic result persistence
 - Interview history listing
 - Detailed attempt view with saved answers
+- History cleanup directly from the graphical interface
 
 ## Technologies Used
 
